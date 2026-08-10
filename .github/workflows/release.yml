@@ -1,0 +1,104 @@
+# SimpleBilly SDK release workflow — identical in every simplebilly-<lang> repo.
+#
+# Triggered by the sdks dispatch pipeline (gitlab.com/simplebilly/sdks, see
+# scripts/dispatch-repos.sh) when a new simplebilly-openapi package version is
+# published, or manually via "Run workflow" with the same inputs.
+#
+# Flow: fetch spec → generate SDK → stamp backlinks → commit → tag v<version>
+#       → GitHub release. Registry publishing is a later step in this file.
+#
+# Required org-level secret: GITLAB_READ_TOKEN (deploy token with
+# read_package_registry on the GitLab app project that publishes the spec).
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "SDK version, e.g. v0.1.0 (also the git tag / release name)"
+        required: true
+      generator:
+        description: "openapi-generator generator name (-g), e.g. typescript-fetch"
+        required: true
+      language:
+        description: "Human-readable language name, e.g. TypeScript"
+        required: true
+      extra_props:
+        description: "Comma separated --additional-properties (may be empty)"
+        required: false
+        default: ""
+      version_prop:
+        description: "Version property name for this generator (may be empty)"
+        required: false
+        default: ""
+      spec_url:
+        description: "URL of the OpenAPI spec to generate from"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.version }}
+      GENERATOR: ${{ inputs.generator }}
+      LANGUAGE: ${{ inputs.language }}
+      EXTRA_PROPS: ${{ inputs.extra_props }}
+      VERSION_PROP: ${{ inputs.version_prop }}
+      SPEC_URL: ${{ inputs.spec_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch OpenAPI spec
+        env:
+          GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
+        run: |
+          curl -fsSL --user "gitlab-read:${GITLAB_READ_TOKEN}" "${SPEC_URL}" -o /tmp/openapi.json
+          jq empty /tmp/openapi.json
+
+      - name: Generate SDK
+        env:
+          OPENAPI_GENERATOR_VERSION: "7.24.0" # matches openapitools.json in the app repo
+        run: |
+          ARGS=(-i /tmp/openapi.json -g "${GENERATOR}" -o /tmp/sdk)
+          PROPS="${EXTRA_PROPS}"
+          if [ -n "${VERSION_PROP}" ]; then
+            PROPS="${PROPS}${PROPS:+,}${VERSION_PROP}=${VERSION}"
+          fi
+          if [ -n "${PROPS}" ]; then
+            ARGS+=(--additional-properties="${PROPS}")
+          fi
+          npx --yes @openapitools/openapi-generator-cli@2.40.1 generate "${ARGS[@]}"
+
+      - name: Merge SDK into repository and stamp backlinks
+        run: |
+          cp -a /tmp/sdk/. .
+          bash .github/stamp-backlinks.sh . "${GENERATOR}" "${LANGUAGE}" "${VERSION}"
+
+      - name: Commit, tag and release
+        run: |
+          set -uo pipefail
+          git config user.name "simplebilly CI"
+          git config user.email "ci@simplebilly.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Release ${VERSION} — ${LANGUAGE} SDK"
+            git push origin main
+          else
+            echo "no changes — already up to date"
+          fi
+          if ! git rev-parse -q --verify "refs/tags/${VERSION}" >/dev/null; then
+            git tag -a "${VERSION}" -m "simplebilly ${LANGUAGE} SDK ${VERSION}"
+            git push origin --tags
+          else
+            echo "tag ${VERSION} already exists"
+          fi
+          gh release create "${VERSION}" --title "simplebilly ${LANGUAGE} SDK ${VERSION}" \
+            --notes "Generated from the SimpleBilly OpenAPI specification." \
+            || echo "release ${VERSION} already exists"
