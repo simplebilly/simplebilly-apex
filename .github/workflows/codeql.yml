@@ -24,11 +24,11 @@ jobs:
     # ponytail: one generic job — CodeQL auto-detects language; no matrix needed for generated SDKs
     steps:
       - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v3
+      - uses: github/codeql-action/init@v4
         with:
           # ponytail: autobuild does nothing for generated SDKs — queries still run on JS/py/go/etc sources
           languages: javascript-python
           queries: security-and-quality
-      - uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/analyze@v4
         with:
           category: "/language:javascript-python"
