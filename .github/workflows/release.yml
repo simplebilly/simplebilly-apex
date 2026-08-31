@@ -55,7 +55,7 @@ jobs:
       VERSION_PROP: ${{ inputs.version_prop }}
       SPEC_URL: ${{ inputs.spec_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Fetch OpenAPI spec
         env:
@@ -66,7 +66,7 @@ jobs:
 
       - name: Generate SDK
         env:
-          OPENAPI_GENERATOR_VERSION: "7.24.0" # matches openapitools.json in the app repo
+          OPENAPI_GENERATOR_VERSION: "7.25.0" # matches openapitools.json in the app repo
         run: |
           PKG_VERSION="${VERSION#v}"
           ARGS=(-i /tmp/openapi.json -g "${GENERATOR}" -o /tmp/sdk)
@@ -77,7 +77,7 @@ jobs:
           if [ -n "${PROPS}" ]; then
             ARGS+=(--additional-properties="${PROPS}")
           fi
-          npx --yes @openapitools/openapi-generator-cli@2.40.1 generate "${ARGS[@]}"
+          npx --yes @openapitools/openapi-generator-cli@2.41.0 generate "${ARGS[@]}"
 
       - name: Merge SDK into repository and stamp backlinks
         run: |
@@ -121,7 +121,7 @@ jobs:
       packages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Publish gate (per-language registry)
         run: |
           echo "publish gate: ${LANGUAGE} ${VERSION} — add per-language publish when registry token is set"
