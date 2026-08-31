@@ -18,30 +18,44 @@ Official Apex client for the [SimpleBilly API](https://simplebilly.com/api/docs)
 
 ## Installation
 
-The package is published to the Apex package registry (and to [GitHub Packages](https://github.com/orgs/simplebilly/packages) for public repos — free for public packages).
+The package is published to the Apex package registry (and to [GitHub Packages](https://github.com/orgs/simplebilly/packages) — free for public packages).
 See the [Releases](https://github.com/simplebilly/simplebilly-apex/releases) page for the list
 of versions and registry coordinates.
 
 ```bash
-# example (registry coordinates are generator-specific, see release notes)
+# registry coordinates are generator-specific, see release notes
 # TypeScript: npm install @simplebilly/api
 # Python:     pip install simplebilly-api
 # Go:         go get github.com/simplebilly/simplebilly-go
+# Java:       com.simplebilly:simplebilly-api-client
+# Rust:       simplebilly_api = "0.1"
 ```
+
+> **After the first release** this section is replaced by the language-specific
+> installation snippet generated from the OpenAPI spec.
 
 ## Usage
 
-See the API documentation at https://simplebilly.com/api/docs for endpoints,
-authentication and examples.
+See the [API documentation](https://simplebilly.com/api/docs) for endpoints, authentication and examples.
+Language-specific snippets are generated into the SDK — see the `docs/` folder (if present) after the first release.
 
-```Apex
-# see generated README.generated.md for language-specific snippets
+```typescript
+// quickstart — import the generated client
+import { Configuration, DefaultApi } from '@simplebilly/api';
+const api = new DefaultApi(new Configuration({ basePath: 'https://simplebilly.com/api/v1', accessToken: 'YOUR_TOKEN' }));
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) — do not edit generated code by hand. Generator tweaks belong in `simplebilly/sdks` (`languages.tsv`).
 
 ## Security
 
-See [SECURITY.md](SECURITY.md) for reporting vulnerabilities. SAST via CodeQL and
-OpenSSF Scorecard runs on every push (free tier, no GitHub Advanced Security required).
+See [SECURITY.md](SECURITY.md) for reporting vulnerabilities. SAST via CodeQL and OpenSSF Scorecard runs on every push (free tier).
+
+## License
+
+[MIT](LICENSE) — Copyright (c) SimpleBilly GmbH. See [LICENSE](LICENSE) for details.
 
 ## Links
 
@@ -50,5 +64,4 @@ OpenSSF Scorecard runs on every push (free tier, no GitHub Advanced Security req
 - **OpenAPI specification:** https://simplebilly.com/api/v1/openapi.json
 - **Other SDKs:** https://github.com/simplebilly
 
-SimpleBilly is the first bookkeeping, CRM, online shop and ERP that doesn't give a fuck — for companies
-that want to do relevant stuff instead of bookkeeping and paying tax lawyers.
+SimpleBilly is the first bookkeeping, CRM, online shop and ERP that follows the mantra: "just do it"

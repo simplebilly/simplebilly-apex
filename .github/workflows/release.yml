@@ -54,8 +54,9 @@ jobs:
       EXTRA_PROPS: ${{ inputs.extra_props }}
       VERSION_PROP: ${{ inputs.version_prop }}
       SPEC_URL: ${{ inputs.spec_url }}
+      REPO: ${{ github.event.repository.name }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Fetch OpenAPI spec
         env:
@@ -80,9 +81,11 @@ jobs:
           npx --yes @openapitools/openapi-generator-cli@2.41.0 generate "${ARGS[@]}"
 
       - name: Merge SDK into repository and stamp backlinks
+        env:
+          REPO: ${{ github.event.repository.name }}
         run: |
           cp -a /tmp/sdk/. .
-          bash .github/stamp-backlinks.sh . "${GENERATOR}" "${LANGUAGE}" "${VERSION}"
+          bash .github/stamp-backlinks.sh . "${GENERATOR}" "${LANGUAGE}" "${VERSION}" "${REPO}"
 
       - name: Commit, tag and release
         run: |
@@ -121,10 +124,10 @@ jobs:
       packages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Publish gate (per-language registry)
         run: |
           echo "publish gate: ${LANGUAGE} ${VERSION} — add per-language publish when registry token is set"
-          echo "GitHub Packages is free for public packages; native registries (npmjs.org, PyPI, Maven Central, ...) are also free for public OSS."
+          echo "native registries (npmjs.org, PyPI, Maven Central, ...) are also free for public OSS."
           echo "Add: npm publish / pypi publish / mvn deploy here behind if: secrets.NPM_TOKEN != '' etc."
           # ponytail: intentionally minimal — prevents 43 broken publish jobs before tokens exist
