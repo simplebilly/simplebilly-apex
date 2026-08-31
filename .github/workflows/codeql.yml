@@ -27,9 +27,22 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@v7
+      - name: Ensure dummy source for CodeQL (pre-generation repos have no source)
+        run: |
+          case "actions" in
+            *javascript*) mkdir -p src && echo 'export const dummy=1;' > src/dummy.ts ;;
+            *python*) echo '# dummy for CodeQL' > dummy.py ;;
+            *go*) printf 'package dummy\n' > dummy.go ;;
+            *java*) mkdir -p src/main/java && echo 'public class Dummy {}' > src/main/java/Dummy.java ;;
+            *csharp*) mkdir -p Dummy && echo 'class Dummy {}' > Dummy/Dummy.cs ;;
+            *ruby*) echo 'dummy=1' > dummy.rb ;;
+            *swift*) echo 'let dummy=1' > dummy.swift ;;
+            *cpp*) echo 'int dummy=1;' > dummy.cpp ;;
+            *) echo "actions only - no dummy needed" ;;
+          esac
+          ls -R 2>&1 | head -n 30 || true
       - uses: github/codeql-action/init@v4
         with:
-          # ponytail: templated per language via bootstrap (actions always included so empty repos still pass)
           languages: actions
           queries: security-and-quality
           build-mode: none
