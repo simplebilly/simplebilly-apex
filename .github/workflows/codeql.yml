@@ -1,6 +1,6 @@
-# CodeQL
-# Runs CodeQL analysis (SAST) on push to main + weekly. Uses the open-source
-# github/codeql-action — available on free tier for public repositories.
+# CodeQL — free for public repos, no GHAS required
+# ponytail: pre-generation repos have no source (only workflows) → `actions` always succeeds
+# After generation, if you want language-specific SAST, extend `languages` via bootstrap mapping
 name: CodeQL
 
 on:
@@ -21,12 +21,19 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
     steps:
       - uses: actions/checkout@v7
       - uses: github/codeql-action/init@v4
         with:
-          languages: javascript,python
+          # ponytail: `actions` scans workflows and always has source (fixes "no source code seen" for empty Apex/Bash/etc SDKs before first generation)
+          # For generated SDKs with real source, bootstrap can template this to `javascript,python,go,...` per language
+          languages: actions
           queries: security-and-quality
+          build-mode: none
       - uses: github/codeql-action/analyze@v4
         with:
-          category: "/language:javascript,python"
+          category: "/language:actions"

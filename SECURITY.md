@@ -11,7 +11,7 @@ This is a generated SDK — the **source of truth is the SimpleBilly API and its
 
 ## Reporting a Vulnerability
 
-- **Email:** michael@simplebilly.com
+- **Email:** security@simplebilly.com
 - **Subject:** `[Security] simplebilly-<lang> — <short title>`
 - Please include: affected repo + tag, steps to reproduce, impact, and if possible a PoC.
 - We aim to acknowledge within **2 business days** and to ship a fix via a new release.
