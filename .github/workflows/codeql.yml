@@ -29,8 +29,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: github/codeql-action/init@v4
         with:
-          # ponytail: `actions` scans workflows and always has source (fixes "no source code seen" for empty Apex/Bash/etc SDKs before first generation)
-          # For generated SDKs with real source, bootstrap can template this to `javascript,python,go,...` per language
+          # ponytail: templated per language via bootstrap (actions always included so empty repos still pass)
           languages: actions
           queries: security-and-quality
           build-mode: none
