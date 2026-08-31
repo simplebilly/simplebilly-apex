@@ -55,7 +55,7 @@ jobs:
       VERSION_PROP: ${{ inputs.version_prop }}
       SPEC_URL: ${{ inputs.spec_url }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Fetch OpenAPI spec
         env:
@@ -121,7 +121,7 @@ jobs:
       packages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Publish gate (per-language registry)
         run: |
           echo "publish gate: ${LANGUAGE} ${VERSION} — add per-language publish when registry token is set"
