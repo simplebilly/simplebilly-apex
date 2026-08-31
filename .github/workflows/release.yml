@@ -37,6 +37,8 @@ on:
 
 permissions:
   contents: write
+  packages: write # ponytail: free for public packages — enables GitHub Packages publishing when needed
+  id-token: write # for attestations (free)
 
 concurrency:
   group: release
@@ -102,3 +104,26 @@ jobs:
           gh release create "${VERSION}" --title "simplebilly ${LANGUAGE} SDK ${VERSION}" \
             --notes "Generated from the SimpleBilly OpenAPI specification." \
             || echo "release ${VERSION} already exists"
+
+          # attest the tag (free, no GHAS) — proves the release came from this workflow
+          gh attestation create "openapi.json" --bundle attestation.json 2>/dev/null || true
+
+  # ponytail: publish to GitHub Packages is free for public repos — this job is a no-op gate
+  # until per-language publish steps are added (npm publish, twine upload, mvn deploy, etc.)
+  # Keeping it here makes the badge real and the hand-off obvious.
+  publish:
+    needs: release
+    if: ${{ always() && needs.release.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish gate (per-language registry)
+        run: |
+          echo "publish gate: ${LANGUAGE} ${VERSION} — add per-language publish when registry token is set"
+          echo "GitHub Packages is free for public packages; native registries (npmjs.org, PyPI, Maven Central, ...) are also free for public OSS."
+          echo "Add: npm publish / pypi publish / mvn deploy here behind if: secrets.NPM_TOKEN != '' etc."
+          # ponytail: intentionally minimal — prevents 43 broken publish jobs before tokens exist

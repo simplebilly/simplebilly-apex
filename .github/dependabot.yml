@@ -1,0 +1,7 @@
+version: 2
+updates:
+  # ponytail: dependabot is free for public repos — just needs this file
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule: { interval: weekly }
+    open-pull-requests-limit: 10
