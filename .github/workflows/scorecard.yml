@@ -1,4 +1,4 @@
-# OpenSSF Scorecard — free OSS alternative to GHAS, no paid tier required
+# OpenSSF Scorecard
 # Publishes results to code scanning + provides badge via api.scorecard.dev
 name: Scorecard
 

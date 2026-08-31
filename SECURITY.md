@@ -18,11 +18,11 @@ This is a generated SDK — the **source of truth is the SimpleBilly API and its
 
 Do **not** open a public issue for vulnerabilities.
 
-## What is scanned (free tier)
+## What is scanned
 
-- **CodeQL** (`codeql.yml`) on every push to `main` and weekly — results in the **Security → Code scanning** tab (free for public repos).
+- **CodeQL** (`codeql.yml`) on every push to `main` and weekly — results in the **Security → Code scanning** tab.
 - **OpenSSF Scorecard** (`scorecard.yml`) weekly — also uploaded as SARIF, badge via `api.scorecard.dev`.
-- **Dependabot alerts** (enable at org level: Settings → Code security → Dependabot alerts) — free for public repos.
+- **Dependabot alerts** (enable at org level: Settings → Code security → Dependabot alerts).
 
 No GitHub Advanced Security subscription required.
 

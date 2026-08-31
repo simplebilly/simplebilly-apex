@@ -1,4 +1,4 @@
-# CodeQL — free for public repos, no GitHub Advanced Security required
+# CodeQL
 # Runs CodeQL analysis (SAST) on push to main + weekly. Uses the open-source
 # github/codeql-action — available on free tier for public repositories.
 name: CodeQL
