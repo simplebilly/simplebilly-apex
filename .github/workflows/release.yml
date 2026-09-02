@@ -62,7 +62,11 @@ jobs:
         env:
           GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
         run: |
-          curl -fsSL --user "gitlab-read:${GITLAB_READ_TOKEN}" "${SPEC_URL}" -o /tmp/openapi.json
+          if [[ "${SPEC_URL}" == *"gitlab.com"* ]]; then
+            curl -fsSL --user "gitlab-read:${GITLAB_READ_TOKEN}" "${SPEC_URL}" -o /tmp/openapi.json
+          else
+            curl -fsSL "${SPEC_URL}" -o /tmp/openapi.json
+          fi
           jq empty /tmp/openapi.json
 
       - name: Generate SDK

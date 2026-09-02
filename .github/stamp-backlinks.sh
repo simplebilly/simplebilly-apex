@@ -57,7 +57,7 @@ This client was generated automatically from the [SimpleBilly OpenAPI specificat
 
 - **Homepage:** https://simplebilly.com
 - **API documentation:** https://simplebilly.com/api/docs
-- **OpenAPI specification:** https://simplebilly.com/api/v1/openapi.json
+- **OpenAPI specification:** https://api.simplebilly.com/openapi.json
 - **SDK sources:** https://github.com/simplebilly
 
 ## Contributing

@@ -1,6 +1,6 @@
 # Contributing
 
-> **Do not edit generated code by hand.** This repository is rebuilt automatically from the [SimpleBilly OpenAPI spec](https://simplebilly.com/api/v1/openapi.json) on every release. Manual edits are overwritten by the next `release.yml` run.
+> **Do not edit generated code by hand.** This repository is rebuilt automatically from the [SimpleBilly OpenAPI spec](https://api.simplebilly.com/openapi.json) on every release. Manual edits are overwritten by the next `release.yml` run.
 
 ## How to contribute
 

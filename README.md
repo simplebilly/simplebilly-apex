@@ -61,7 +61,7 @@ See [SECURITY.md](SECURITY.md) for reporting vulnerabilities. SAST via CodeQL an
 
 - **Homepage:** https://simplebilly.com
 - **API documentation:** https://simplebilly.com/api/docs
-- **OpenAPI specification:** https://simplebilly.com/api/v1/openapi.json
+- **OpenAPI specification:** https://api.simplebilly.com/openapi.json
 - **Other SDKs:** https://github.com/simplebilly
 
 SimpleBilly is the first bookkeeping, CRM, online shop and ERP that follows the mantra: "just do it"
