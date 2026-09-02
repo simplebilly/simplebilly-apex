@@ -39,7 +39,6 @@ permissions:
   contents: write
   packages: write
   id-token: write
-  workflows: write
 
 concurrency:
   group: release
@@ -90,6 +89,8 @@ jobs:
           REPO: ${{ github.event.repository.name }}
         run: |
           cp -a /tmp/sdk/. .
+          # ponytail: generator may emit its own .github/workflows (e.g. python.yml) — keep only our 3
+          find .github/workflows -type f ! -name 'release.yml' ! -name 'codeql.yml' ! -name 'scorecard.yml' -delete 2>/dev/null || true
           bash .github/stamp-backlinks.sh . "${GENERATOR}" "${LANGUAGE}" "${VERSION}" "${REPO}"
 
       - name: Commit, tag and release
