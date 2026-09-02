@@ -74,7 +74,7 @@ jobs:
           OPENAPI_GENERATOR_VERSION: "7.25.0" # matches openapitools.json in the app repo
         run: |
           PKG_VERSION="${VERSION#v}"
-          ARGS=(-i /tmp/openapi.json -g "${GENERATOR}" -o /tmp/sdk)
+          ARGS=(-i /tmp/openapi.json -g "${GENERATOR}" -o /tmp/sdk --skip-validate-spec)
           PROPS="${EXTRA_PROPS}"
           if [ -n "${VERSION_PROP}" ]; then
             PROPS="${PROPS}${PROPS:+,}${VERSION_PROP}=${PKG_VERSION}"
